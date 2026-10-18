@@ -1,0 +1,60 @@
+# link2md 配置示例
+# 生成到用户配置目录：link2md init
+# Linux 默认路径：~/.config/link2md/config.yaml
+# 也可用环境变量 LINK2MD_CONFIG 指向别的文件。
+
+vault:
+  # Obsidian 仓库根目录。环境变量 LINK2MD_VAULT 会覆盖这里。
+  path: ""
+  # 笔记写入这个子目录
+  notes_dir: link2md
+  # 图片附件目录（相对仓库根目录）
+  attachments_dir: link2md/attachments
+
+# 同一链接再次保存时：skip 跳过，update 覆盖原笔记
+duplicate_policy: skip
+
+# 下载和转写缓存。留空则使用系统缓存目录（Linux：~/.cache/link2md）
+cache_dir: ""
+
+http_timeout: 30
+log_level: INFO
+
+asr:
+  # faster-whisper：本地转写；dashscope：阿里云百炼 Paraformer
+  backend: faster-whisper
+  # 语言提示。留空表示让模型自己判断。
+  language: zh
+  faster_whisper:
+    model: small
+    device: cpu
+    compute_type: int8
+  dashscope:
+    # 本地文件走实时模型。paraformer-v2 的文件转写接口要求公网 URL。
+    model: paraformer-realtime-v2
+    api_key_env: DASHSCOPE_API_KEY
+    # 可选。工作空间专属域名，例如：
+    # wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/inference
+    base_websocket_api_url: ""
+    # 长音频按这个秒数切段后再转写
+    chunk_seconds: 600
+
+llm:
+  # OpenAI 兼容接口，默认 DeepSeek。
+  # 换成其他服务时，改 provider、base_url、model、api_key_env 即可。
+  provider: deepseek
+  base_url: https://api.deepseek.com
+  model: deepseek-flash
+  api_key_env: DEEPSEEK_API_KEY
+  # 长文本按这个字符数分段整理，再合并摘要
+  chunk_chars: 8000
+  temperature: 0.2
+  json_mode: true
+
+cookies:
+  # Netscape cookies.txt，传给 yt-dlp。
+  # B 站字幕和部分视频需要登录态；匿名请求经常得到 HTTP 412。
+  bilibili: ""
+  # v2 预留。抖音、小红书抓取会读取这些文件，当前版本不会使用。
+  douyin: ""
+  xiaohongshu: ""
